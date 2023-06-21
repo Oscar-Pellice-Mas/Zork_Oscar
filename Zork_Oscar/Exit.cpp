@@ -14,6 +14,10 @@ Direction Exit::getDirection() const {
     return direction;
 }
 
+Item* Exit::getKey() const {
+    return key;
+}
+
 Room* Exit::getSource() const {
     return source;
 }

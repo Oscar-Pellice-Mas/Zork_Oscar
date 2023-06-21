@@ -71,8 +71,119 @@ int World::play() {
 
     // Game loop
     cout << "Welcome to the game!" << endl;
-    cout << getPlayer()->getLocation()->getDescription()  << endl;
+    cout << player->getLocation()->getDescription() << endl;
     cout << "Type 'help' for instructions." << endl;
+
+    string command;
+    bool gameOver = false;
+    while (!gameOver) {
+        cout << "> ";
+        getline(cin, command);
+
+        if (command == "help") {
+            cout << "Available commands:" << endl;
+            cout << "- look: Look around the room." << endl;
+            cout << "- take [item]: Take an item from the room." << endl;
+            cout << "- drop [item]: Drop an item from your inventory." << endl;
+            cout << "- move [direction]: Move to another room." << endl;
+            cout << "- open [door]: Open a door in the room." << endl;
+            cout << "- attack [creature]: Attack a creature in the room." << endl;
+            cout << "- quit: Quit the game." << endl;
+        } else if (command == "look") {
+            Room* currentRoom = player->getLocation();
+            cout << currentRoom->getDescription() << endl;
+            cout << "Items in the room: ";
+            list<Item*> items = currentRoom->getItems();
+            if (items.empty()) {
+                cout << "None";
+            }
+            else {
+                for (Item* item : items) {
+                    cout << item->getName() << " ";
+                }
+            }
+            cout << endl;
+            cout << "Creatures in the room: ";
+            list<Creature*> creatures = currentRoom->getCreatures();
+            if (creatures.empty()) {
+                cout << "None";
+            }
+            else {
+                for (Creature* creature : creatures) {
+                    cout << creature->getName() << " ";
+                }
+            }
+            cout << endl;
+        } else if (command.substr(0, 4) == "take") {
+            string itemName = command.substr(5);
+            // Take item logic
+            Room* currentRoom = player->getLocation();
+            list<Item*> items = currentRoom->getItems();
+            for (Item* item : items) {
+                if (item->getName() == itemName) {
+                    player->addItem(item);
+                    currentRoom->removeItem(item);
+                    cout << "You took the " << item->getName() << "." << endl;
+                    break;
+                }
+            }
+        }
+        else if (command.substr(0, 4) == "drop") {
+            string itemName = command.substr(5);
+            // Drop item logic
+            Room* currentRoom = player->getLocation();
+            list<Item*> items = player->getItems();
+            for (Item* item : items) {
+                if (item->getName() == itemName) {
+                    player->removeItem(item);
+                    currentRoom->addItem(item);
+                    cout << "You dropped the " << item->getName() << "." << endl;
+                    break;
+                }
+            }
+        }
+        /*else if (command.substr(0, 4) == "move") {
+            string direction = command.substr(5);
+            // Move to another room logic
+            Room* currentRoom = player->getLocation();
+            list<Exit*> exits = currentRoom->getExits();
+            for (Exit* exit : exits) {
+                if (exit->getDirection() == direction) {
+                    Room* nextRoom = exit->getDestination();
+                    player->setLocation(nextRoom);
+                    cout << "You moved to " << nextRoom->getName() << "." << endl;
+                    break;
+                }
+            }
+        }*/
+        else if (command.substr(0, 4) == "open") {
+            string doorName = command.substr(5);
+            // Open door logic
+            Room* currentRoom = player->getLocation();
+            list<Exit*> exits = currentRoom->getExits();
+            for (Exit* exit : exits) {
+                if (exit->isLocked()) {
+                    if (player->removeItem(exit->getKey())) {
+                        exit->unlock(exit->getKey());
+                        cout << "You unlocked the door using the " << exit->getKey()->getName() << "." << endl;
+                    }
+                    else {
+                        cout << "The door is locked, and you don't have the key." << endl;
+                    }
+                }
+                else {
+                    cout << "The door is already open." << endl;
+                }
+            }
+        }
+        else if (command == "quit") {
+            gameOver = true;
+            cout << "Goodbye!" << endl;
+        }
+        else {
+            cout << "Invalid command. Type 'help' for instructions." << endl;
+        }
+    }
 
     return 0;
 }

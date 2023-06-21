@@ -21,11 +21,11 @@ string Entity::getDescription() const {
     return description;
 }
 
-void Entity::addItem(Entity* item) {
+void Entity::addEntity(Entity* item) {
     contains.push_back(item);
 }
 
-bool Entity::removeItem(Entity* item) {
+bool Entity::removeEntity(Entity* item) {
     auto it = find(contains.begin(), contains.end(), item);
     if (it != contains.end()) {
         contains.erase(it);
@@ -34,6 +34,6 @@ bool Entity::removeItem(Entity* item) {
     return false;
 }
 
-list<Entity*> Entity::getItems() const {
+list<Entity*> Entity::getEntity() const {
     return contains;
 }

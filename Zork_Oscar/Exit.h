@@ -30,6 +30,7 @@ public:
 	Direction getDirection() const;
 	Room* getSource() const;
 	Room* getDestination() const;
+	Item* getKey() const;
 	bool isLocked() const;
 	bool unlock(Item* item);
 

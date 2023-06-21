@@ -21,6 +21,23 @@ void Creature::setLocation(Room* room) {
     location = room;
 }
 
+void Creature::addItem(Item* item) {
+    inventory.push_back(item);
+}
+
+bool Creature::removeItem(Item* item) {
+    auto it = find(inventory.begin(), inventory.end(), item);
+    if (it != inventory.end()) {
+        inventory.erase(it);
+        return true;
+    }
+    return false;
+}
+
+list<Item*> Creature::getItems() const {
+    return inventory;
+}
+
 int Creature::getHealth() const {
     return health;
 }

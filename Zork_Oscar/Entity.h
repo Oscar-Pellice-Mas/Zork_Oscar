@@ -24,9 +24,9 @@ public:
     string getName() const;
     string getDescription() const;
 
-    void addItem(Entity* item);
-    bool removeItem(Entity* item);
-    list<Entity*> getItems() const;
+    void addEntity(Entity* item);
+    bool removeEntity(Entity* item);
+    list<Entity*> getEntity() const;
 
 private:
 	EntityType type;
