@@ -102,6 +102,18 @@ Direction translateDirection(string parameter) {
     }
 }
 
+inline const char* DirToString(Direction value)
+{
+    switch (value)
+    {
+    case Direction::NORTH:   return "North";
+    case Direction::EAST:   return "East"; 
+    case Direction::WEST: return "West";
+    case Direction::SOUTH: return "South";
+    default:      return "[Unknown Direction type]";
+    }
+}
+
 int World::play() {
     
     vector<Command> commands = {
@@ -166,7 +178,10 @@ int World::play() {
                 }
                 else if (command == "look") {
                     Room* currentRoom = player->getLocation();
+                    //system("cls");
+                    cout << currentRoom->getName() << endl;
                     cout << currentRoom->getDescription() << endl;
+                    cout << endl;
                     cout << "Items in the room: ";
                     list<Item*> items = currentRoom->getItems();
                     if (items.empty()) {
@@ -174,7 +189,7 @@ int World::play() {
                     }
                     else {
                         for (Item* item : items) {
-                            cout << item->getName() << " ";
+                            cout << item->getName() << ", ";
                         }
                     }
                     cout << endl;
@@ -185,10 +200,22 @@ int World::play() {
                     }
                     else {
                         for (Creature* creature : creatures) {
-                            cout << creature->getName() << " ";
+                            cout << creature->getName() << ", ";
                         }
                     }
                     cout << endl;
+                    cout << "Exits on the room: ";
+                    list<Exit*> exits = currentRoom->getExits();
+                    if (exits.empty()) {
+                        cout << "None";
+                    }
+                    else {
+                        for (Exit* exit : exits) {
+                            cout << exit->getName() << " on the ";
+                            cout << DirToString(exit->getDirection()) << ", ";
+                        }
+                    }
+
                 }
                 else if (command == "take") {
                     string itemName = parameter;
