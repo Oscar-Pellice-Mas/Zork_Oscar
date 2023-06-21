@@ -74,33 +74,5 @@ int World::play() {
     cout << getPlayer()->getLocation()->getDescription()  << endl;
     cout << "Type 'help' for instructions." << endl;
 
-    /*string command;
-    while (true) {
-        cout << "> ";
-        getline(cin, command);
-
-        if (command == "help") {
-            // Print help instructions
-        }
-        else if (command == "look") {
-            // Print room description
-        }
-        else if (command.substr(0, 4) == "take") {
-            string itemName = command.substr(5);
-            // Take item logic
-        }
-        else if (command.substr(0, 4) == "drop") {
-            string itemName = command.substr(5);
-            // Drop item logic
-        }
-        else if (command.substr(0, 4) == "move") {
-            string direction = command.substr(5);
-            // Move to another room logic
-        }
-        else {
-            cout << "Invalid command. Type 'help' for instructions." << endl;
-        }
-    }*/
-
     return 0;
 }
