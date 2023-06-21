@@ -8,7 +8,9 @@
 using namespace std;
 
 int main() {
-	cout << "----------------\n";
-	cout << "Welcome to MyZork!\n";
-	cout << "----------------\n";
+    World world;
+
+    world.play();
+
+
 }

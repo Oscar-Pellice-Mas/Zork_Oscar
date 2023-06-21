@@ -5,7 +5,7 @@
 #include "Item.h"
 
 // ----- Constructor -----
-Item::Item(const string& name, const string& description, ItemType itemType) : Entity(EntityType::ITEM, name, description), itemType(itemType) {}
+Item::Item(const char* name, const char* description, ItemType itemType) : Entity(EntityType::ITEM, name, description), itemType(itemType) {}
 
 // ----- Deconstructor -----
 Item::~Item() {

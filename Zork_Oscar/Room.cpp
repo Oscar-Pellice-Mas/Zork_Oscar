@@ -6,7 +6,7 @@
 #include "Room.h"
 
 // ----- Constructor -----
-Room::Room(const string& name, const string& description) : Entity(EntityType::ROOM, name, description) {}
+Room::Room(const char* name, const char* description) : Entity(EntityType::ROOM, name, description) {}
 
 // ----- Deconstructor -----
 Room::~Room() {
@@ -35,4 +35,21 @@ void Room::addExit(Exit* exit) {
 
 list<Exit*> Room::getExits() const {
     return exits;
+}
+
+void Room::addCreature(Creature* creature) {
+    creatures.push_back(creature);
+}
+
+bool Room::removeCreature(Creature* creature) {
+    auto it = find(creatures.begin(), creatures.end(), creature);
+    if (it != creatures.end()) {
+        creatures.erase(it);
+        return true;
+    }
+    return false;
+}
+
+list<Creature*> Room::getCreatures() const {
+    return creatures;
 }

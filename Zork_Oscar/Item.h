@@ -16,7 +16,7 @@ enum ItemType {
 
 class Item : public Entity {
 public:
-	Item(const string& name, const string& description, ItemType itemType);
+	Item(const char* name, const char* description, ItemType itemType);
 	~Item();
 
 private:

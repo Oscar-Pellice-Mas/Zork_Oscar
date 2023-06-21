@@ -17,12 +17,13 @@ enum EntityType {
 
 class Entity {
 public:
-	Entity(const EntityType type, const string& name, const string& description);
+	Entity(const EntityType type, const char* name, const char* description);
 	virtual ~Entity();
 
     EntityType getEntityType() const;
     string getName() const;
     string getDescription() const;
+
     void addItem(Entity* item);
     bool removeItem(Entity* item);
     list<Entity*> getItems() const;

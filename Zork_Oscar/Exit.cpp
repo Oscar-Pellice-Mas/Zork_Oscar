@@ -3,8 +3,8 @@
 #include "Exit.h"
 
 // ----- Constructor -----
-Exit::Exit(const string& name, const string& description, Direction direction, Room* source, Room* destination) :
-	Entity(EntityType::EXIT, name, description), direction(direction), source(source), destination(destination) {}
+Exit::Exit(const char* name, const char* description, Direction direction, Room* source, Room* destination, DoorState state, Item* key) :
+	Entity(EntityType::EXIT, name, description), direction(direction), source(source), destination(destination), state(state), key(key) {}
 
 // ----- Deconstructor -----
 Exit::~Exit() {
@@ -20,4 +20,16 @@ Room* Exit::getSource() const {
 
 Room* Exit::getDestination() const {
     return destination;
+}
+
+bool Exit::isLocked() const {
+    return state == DoorState::CLOSED;
+}
+
+bool Exit::unlock(Item* item) {
+    if (key == item) {
+        state = DoorState::OPEN;
+        return true;
+    }
+    return false;
 }

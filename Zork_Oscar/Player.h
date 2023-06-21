@@ -7,7 +7,7 @@ using namespace std;
 
 class Player : public Creature {
 public:
-	Player(const string& name, const string& description, Room* location);
+	Player(const char* name, const char* description, Room* location, int health, int attack, int defense);
 	~Player();
 
 private:

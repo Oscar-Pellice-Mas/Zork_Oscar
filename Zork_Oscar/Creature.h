@@ -11,14 +11,20 @@ using namespace std;
 
 class Creature : public Entity {
 public:
-	Creature(const string& name, const string& description, Room* location);
+	Creature(const char* name, const char* description, Room* location, int health, int attack, int defense);
 	~Creature();
 
     Room* getLocation() const;
 	void setLocation(Room* room);
+    int getHealth() const;
+	int getAttack() const; 
+	int getDefense() const;
 
 private:
 	Room* location;
-};
 
+	int health;
+	int attack;
+	int defense;
+};
 #endif

@@ -5,6 +5,7 @@
 #include "Entity.h"
 
 class Room;
+class Item;
 
 using namespace std;
 
@@ -15,20 +16,30 @@ enum class Direction {
 	WEST
 };
 
+enum class DoorState {
+	OPEN,
+	CLOSED
+};
+
 
 class Exit : public Entity {
 public:
-	Exit(const string& name, const string& description, Direction direction, Room* source, Room* destination);
+	Exit(const char* name, const char* description, Direction direction, Room* source, Room* destination, DoorState state, Item* key);
 	~Exit();
 
 	Direction getDirection() const;
 	Room* getSource() const;
 	Room* getDestination() const;
+	bool isLocked() const;
+	bool unlock(Item* item);
 
-public:
+private:
 	Direction direction;
 	Room* source;
-	Room* destination;
+	Room* destination; 
+	
+	DoorState state;
+	Item* key;
 };
 
 #endif

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <list>
-#include <vector>
 
 using namespace std;
 
@@ -16,10 +15,15 @@ public:
 	~World();
 
 	void addEntity(Entity* entity);
-	vector<Entity*> getEntities() const;
+	list<Entity*> getEntities() const;
+
+	void addPlayer(Player* player);
+	Player* getPlayer();
+
+	int play();
 
 private:
-	vector<Entity*> entities;
+	list<Entity*> entities;
 	Player* player;
 };
 

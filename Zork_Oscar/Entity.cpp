@@ -3,7 +3,7 @@
 #include "Entity.h"
 
 // ----- Constructor -----
-Entity::Entity(const EntityType type, const string& name, const string& description) : type(type), name(name), description(description) {}
+Entity::Entity(const EntityType type, const char* name, const char* description) : type(type), name(name), description(description) {}
 
 // ----- Deconstructor -----
 Entity::~Entity() {

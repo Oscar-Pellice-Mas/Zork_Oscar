@@ -6,7 +6,8 @@
 #include "Creature.h"
 
 // ----- Constructor -----
-Creature::Creature(const string& name, const string& description, Room* location) : Entity(EntityType::CREATURE, name, description), location(location) {}
+Creature::Creature(const char* name, const char* description, Room* location, int health, int attack, int defense) :
+    Entity(EntityType::CREATURE, name, description), location(location), health(health), attack(attack), defense(defense){}
 
 // ----- Deconstructor -----
 Creature::~Creature() {
@@ -18,4 +19,16 @@ Room* Creature::getLocation() const {
 
 void Creature::setLocation(Room* room) {
     location = room;
+}
+
+int Creature::getHealth() const {
+    return health;
+}
+
+int Creature::getAttack() const {
+    return attack;
+}
+
+int Creature::getDefense() const {
+    return defense;
 }

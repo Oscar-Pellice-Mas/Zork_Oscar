@@ -6,7 +6,8 @@
 #include "Player.h"
 
 // ----- Constructor -----
-Player::Player(const string& name, const string& description, Room* location) : Creature(name, description, location) {}
+Player::Player(const char* name, const char* description, Room* location, int health, int attack, int defense)
+    : Creature(name, description, location, health, attack, defense) {}
 
 // ----- Deconstructor -----
 Player::~Player() {

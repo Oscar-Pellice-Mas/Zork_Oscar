@@ -10,8 +10,6 @@
 
 // ----- Constructor -----
 World::World() {
-    World world;
-
     // Create items
     Item* key = new Item("Key", "A key", ItemType::COMMON);
     Item* box = new Item("Box", "A box", ItemType::COMMON);
@@ -22,31 +20,32 @@ World::World() {
     Room* room2 = new Room("Room 2", "This is the second room.");
     Room* room3 = new Room("Room 3", "This is the third room.");
 
+    // Create exits
+    Exit* exit1 = new Exit("Door", "A wood door", Direction::NORTH, room1, room2, DoorState::CLOSED, key);
+    Exit* exit2 = new Exit("Window", "An opened window", Direction::SOUTH, room2, room3, DoorState::OPEN, NULL);
+
+    // Add exits to rooms
+    room1->addExit(exit1);
+    room2->addExit(exit2);
+
     // Add items to rooms
     room1->addItem(key);
     room2->addItem(box);
     room3->addItem(sword);
 
     // Create player and NPC
-    Player* player = new Player("Player", "The main character", room1);
-    Creature* npc = new Creature("NPC", "A non-player character", room2);
+    Player* player = new Player("Player", "The main character", room1, 100, 10, 5);
+    Creature* npc = new Creature("NPC", "A non-player character", room2, 80, 8, 4);
 
     // Add player and NPC to the world
-    world.addEntity(player);
-    world.addEntity(npc);
+    addPlayer(player);
+    addEntity(npc);
 
-    // Create exits
-    Exit* exit1 = new Exit("Door", "A wood door", Direction::NORTH, room1, room2);
-    Exit* exit2 = new Exit("Window", "An opened window", Direction::SOUTH, room2, room3);
-
-    // Add exits to rooms
-    room1->addExit(exit1);
-    room2->addExit(exit2);
 }
 
 // ----- Deconstructor -----
 World::~World() {
-	for (vector<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it)
+	for (list<Entity*>::iterator it = entities.begin(); it != entities.end(); ++it)
 		delete* it;
 
 	entities.clear();
@@ -56,6 +55,52 @@ void World::addEntity(Entity* entity) {
     entities.push_back(entity);
 }
 
-vector<Entity*> World::getEntities() const {
+list<Entity*> World::getEntities() const {
     return entities;
+}
+
+void World::addPlayer(Player* player) {
+    World::player = player;
+}
+
+Player* World::getPlayer() {
+    return player;
+}
+
+int World::play() {
+
+    // Game loop
+    cout << "Welcome to the game!" << endl;
+    cout << getPlayer()->getLocation()->getDescription()  << endl;
+    cout << "Type 'help' for instructions." << endl;
+
+    /*string command;
+    while (true) {
+        cout << "> ";
+        getline(cin, command);
+
+        if (command == "help") {
+            // Print help instructions
+        }
+        else if (command == "look") {
+            // Print room description
+        }
+        else if (command.substr(0, 4) == "take") {
+            string itemName = command.substr(5);
+            // Take item logic
+        }
+        else if (command.substr(0, 4) == "drop") {
+            string itemName = command.substr(5);
+            // Drop item logic
+        }
+        else if (command.substr(0, 4) == "move") {
+            string direction = command.substr(5);
+            // Move to another room logic
+        }
+        else {
+            cout << "Invalid command. Type 'help' for instructions." << endl;
+        }
+    }*/
+
+    return 0;
 }
