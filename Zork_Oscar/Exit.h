@@ -13,7 +13,8 @@ enum class Direction {
 	NORTH,
 	SOUTH,
 	EAST,
-	WEST
+	WEST,
+	INCORRECT
 };
 
 enum class DoorState {
