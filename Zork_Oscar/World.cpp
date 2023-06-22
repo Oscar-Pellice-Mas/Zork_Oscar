@@ -72,7 +72,6 @@ struct Command {
 
 // Function to check if a command matches any of the given synonyms
 bool matchesSynonyms(string command, const vector<string>& synonyms) {
-    transform(command.begin(), command.end(), command.begin(), ::tolower);
     for (const string& synonym : synonyms) {
         if (command == synonym) {
             return true;
@@ -82,18 +81,18 @@ bool matchesSynonyms(string command, const vector<string>& synonyms) {
 }
 
 // Transforms string into Direction enum
-Direction stringToDir(string parameter) {
-    transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
-    if (parameter == "north") {
+Direction stringToDir(string value) {
+    transform(value.begin(), value.end(), value.begin(), ::tolower);
+    if (value == "north") {
         return Direction::NORTH;
     } 
-    else if (parameter == "east") {
+    else if (value == "east") {
         return Direction::EAST;
     }
-    else if (parameter == "west") {
+    else if (value == "west") {
         return Direction::WEST;
     }
-    else if (parameter == "south") {
+    else if (value == "south") {
         return Direction::SOUTH;
     }
     else {
@@ -119,6 +118,12 @@ void printBase(Player* player) {
     cout << "Location: " << player->getLocation()->getName() << endl;
     cout << player->getLocation()->getDescription() << endl;
     cout << endl;
+}
+
+string stringToLower(string value) {
+    string lowered = value;
+    transform(lowered.begin(), lowered.end(), lowered.begin(), ::tolower);
+    return lowered;
 }
 
 int World::play() {
@@ -162,11 +167,13 @@ int World::play() {
         if (spacePos != string::npos) {
             command = input.substr(0, spacePos);
             parameter = input.substr(spacePos + 1);
+            transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
         }
         else {
             command = input;
         }
-        
+        transform(command.begin(), command.end(), command.begin(), ::tolower);
+ 
         // Matches synonims giving the user input
         bool commandMatched = false;
         for (const Command& validCommand : commands) {
@@ -243,7 +250,7 @@ int World::play() {
                         Room* currentRoom = player->getLocation();
                         list<Item*> items = currentRoom->getItems();
                         for (Item* item : items) {
-                            if (item->getName() == itemName) {
+                            if (stringToLower(item->getName()) == itemName) {
                                 found = true;
                                 player->addItem(item);
                                 currentRoom->removeItem(item);
@@ -269,7 +276,7 @@ int World::play() {
                         Room* currentRoom = player->getLocation();
                         list<Item*> items = player->getItems();
                         for (Item* item : items) {
-                            if (item->getName() == itemName) {
+                            if (stringToLower(item->getName()) == itemName) {
                                 found = true;
                                 player->removeItem(item);
                                 currentRoom->addItem(item);
@@ -333,7 +340,7 @@ int World::play() {
                         Room* currentRoom = player->getLocation();
                         list<Exit*> exits = currentRoom->getExits();
                         for (Exit* exit : exits) {
-                            if (exit->getName() == parameter) {
+                            if (stringToLower(exit->getName()) == parameter) {
                                 found = true;
                                 if (exit->isLocked()) {
                                     if (player->removeItem(exit->getKey())) {
@@ -367,7 +374,7 @@ int World::play() {
                         Room* currentRoom = player->getLocation();
                         list<Creature*> creatures = currentRoom->getCreatures();
                         for (Creature* creature : creatures) {
-                            if (creature->getName() == parameter) {
+                            if (stringToLower(creature->getName()) == parameter) {
                                 found = true;
                                 getPlayer()->makeAttack(creature);
                             }
@@ -388,7 +395,7 @@ int World::play() {
                         bool found = false;
                         list<Item*> items = player->getItems();
                         for (Item* item : items) {
-                            if (item->getName() == parameter) {
+                            if (stringToLower(item->getName()) == parameter) {
                                 found = true;
                                 if (getPlayer()->equipItem(item)) {
                                     cout << "You equipped " << item->getName() << endl;
@@ -414,7 +421,7 @@ int World::play() {
                         bool found = false;
                         list<Item*> items = player->getEquippedIems();
                         for (Item* item : items) {
-                            if (item->getName() == parameter) {
+                            if (stringToLower(item->getName()) == parameter) {
                                 found = true;
                                 getPlayer()->unequipItem(item);
                                 cout << "You unequipped " << item->getName() << endl;
@@ -439,7 +446,7 @@ int World::play() {
                         if (!found) {
                             list<Item*> items = player->getEquippedIems();
                             for (Item* item : items) {
-                                if (item->getName() == parameter) {
+                                if (stringToLower(item->getName()) == parameter) {
                                     found = true;
                                     cout << "You inspect the " << item->getName() << " you have equiped." << endl;
                                     cout << item->getDescription() << endl;
@@ -452,7 +459,7 @@ int World::play() {
                         if (!found) {
                             list<Item*> items = player->getItems();
                             for (Item* item : items) {
-                                if (item->getName() == parameter) {
+                                if (stringToLower(item->getName()) == parameter) {
                                     found = true;
                                     cout << "You inspect the " << item->getName() << " on your inventory." << endl;
                                     cout << item->getDescription() << endl;
@@ -466,7 +473,7 @@ int World::play() {
                             Room* currentRoom = player->getLocation();
                             list<Exit*> exits = currentRoom->getExits();
                             for (Exit* exit : exits) {
-                                if (exit->getName() == parameter) {
+                                if (stringToLower(exit->getName()) == parameter) {
                                     found = true;
                                     cout << "You inspect the " << exit->getName() << " on the room." << endl;
                                     cout << exit->getDescription() << endl;
@@ -480,7 +487,7 @@ int World::play() {
                             Room* currentRoom = player->getLocation();
                             list<Item*> items = currentRoom->getItems();
                             for (Item* item : items) {
-                                if (item->getName() == parameter) {
+                                if (stringToLower(item->getName()) == parameter) {
                                     found = true;
                                     cout << "You inspect the " << item->getName() << " on the room." << endl;
                                     cout << item->getDescription() << endl;
@@ -494,7 +501,7 @@ int World::play() {
                             Room* currentRoom = player->getLocation();
                             list<Creature*> creatures = currentRoom->getCreatures();
                             for (Creature* creature : creatures) {
-                                if (creature->getName() == parameter) {
+                                if (stringToLower(creature->getName()) == parameter) {
                                     found = true;
                                     cout << "You inspect the " << creature->getName() << " on the room." << endl;
                                     cout << creature->getDescription() << endl;
@@ -503,7 +510,7 @@ int World::play() {
                             }
                         }
 
-
+                        // Not found
                         if (!found) {
                             cout << "There is no " << parameter << " to inspect." << endl;
                         }
