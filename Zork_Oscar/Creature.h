@@ -25,8 +25,9 @@ public:
 	int getAttack() const; 
 	int getDefense() const;
 
-	bool equipItem(Item* value);
-	bool unequipItem(Item* value);
+	bool equipItem(Item* item);
+	void unequipItem(Item* item);
+	list<Item*> getEquippedIems();
 
 	void takeDamage(int damage);
 	void makeAttack(Creature* target);

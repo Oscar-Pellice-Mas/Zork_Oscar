@@ -50,32 +50,28 @@ int Creature::getDefense() const {
     return defense;
 }
 
-bool Creature::equipItem(Item* value) {
-    for (Item* item : inventory) {
-        if (item = value) {
-            if (item->isEquipable()) {
-                equippedItems.push_back(item);
-                inventory.remove(value);
-                attack += item->getAttack();
-                defense += item->getDefense();
-                return true;
-            }
-        }
+bool Creature::equipItem(Item* item) {
+    if (item->isEquipable()) {
+        equippedItems.push_back(item);
+        inventory.remove(item);
+        attack += item->getAttack();
+        defense += item->getDefense();
+        return true;
     }
+        
     return false;
 }
 
-bool Creature::unequipItem(Item* value) {
-    for (Item* item : equippedItems) {
-        if (item = value) {
-            equippedItems.remove(item);
-            inventory.push_back(item);
-            attack -= item->getAttack();
-            defense -= item->getDefense();
-            return true;
-        }
-    }
-    return false;
+void Creature::unequipItem(Item* item) {
+    equippedItems.remove(item);
+    inventory.push_back(item);
+    attack -= item->getAttack();
+    defense -= item->getDefense();
+}
+
+
+list<Item*> Creature::getEquippedIems() {
+    return equippedItems;
 }
 
 void Creature::takeDamage(int damage) {

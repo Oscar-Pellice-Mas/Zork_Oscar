@@ -112,37 +112,48 @@ inline const char* DirToString(Direction value) {
     }
 }
 
+void printBase(Player* player) {
+    system("CLS");
+    cout << "_-- Zork --_" << endl;
+    cout << "---------------------------------------" << endl;
+    cout << "Location: " << player->getLocation()->getName() << endl;
+    cout << player->getLocation()->getDescription() << endl;
+    cout << endl;
+}
+
 int World::play() {
     
     // Create a list of commands synonims
     vector<Command> commands = {
         { "help", { "help", "info" } },
-        { "look", { "look", "observe" } },
-        { "take", { "take", "grab" } },
-        { "drop", { "drop", "discard" } },
+        { "look", { "look", "observe", "see"}},
+        { "take", { "take", "grab", "get"}},
+        { "drop", { "drop", "discard", "throw"}},
         { "move", { "move", "go", "enter" } },
         { "open", { "open", "unlock" } },
-        { "attack", { "attack", "fight" } },
-        { "inspect", { "inspect", "examine" } },
-        { "interact", { "interact", "talk" } },
+        { "attack", { "attack", "fight", "hit"}},
         { "equip", { "equip", "wear" } },
         { "unequip", { "unequip", "remove" } },
-        { "search", { "search", "look for" } },
         { "quit", { "quit", "exit" } }
     };
 
     // Game loop
-    cout << "Welcome to the game!" << endl;
+    system("CLS");
+    cout << "_-- Zork --_" << endl;
+    cout << "---------------------------------------" << endl;
+    cout << "Location: " << player->getLocation()->getName() << endl;
     cout << player->getLocation()->getDescription() << endl;
-    cout << "Type 'help' for instructions." << endl;
 
     string input;
     bool gameOver = false;
     while (!gameOver) {
+
         // Grab player input
-        cout << endl;
-        cout << "Enter your action: ";
+        cout << "---------------------------------------" << endl;
+        cout << "Enter your action:";
         getline(cin, input);
+
+        printBase(player);
 
         // Separates the input into command and parameters
         string command, parameter;
@@ -175,17 +186,14 @@ int World::play() {
                     cout << "- take [item]: Take an item from the room." << endl;
                     cout << "- drop [item]: Drop an item from your inventory." << endl;
                     cout << "- move [direction]: Move to another room." << endl;
-                    cout << "- open [door]: Open a door in the room." << endl;
+                    cout << "- open [exit]: Open a door in the room." << endl;
+                    cout << "- attack [creature]: Open a door in the room." << endl;
                     cout << "- quit: Quit the game." << endl;
                 }
                 // Look action
                 // Shows current room description or inspects an entity if given a parameter
                 else if (command == "look") {
                     Room* currentRoom = player->getLocation();
-                    //system("cls");
-                    cout << currentRoom->getName() << endl;
-                    cout << currentRoom->getDescription() << endl;
-                    cout << endl;
                     cout << "Items in the room: ";
                     list<Item*> items = currentRoom->getItems();
                     if (items.empty()) {
@@ -219,6 +227,7 @@ int World::play() {
                             cout << DirToString(exit->getDirection()) << ", ";
                         }
                     }
+                    cout << endl;
 
                 }
                 // Take action
@@ -298,6 +307,7 @@ int World::play() {
                                     else {
                                         Room* nextRoom = exit->getDestination();
                                         player->setLocation(nextRoom);
+                                        printBase(player);
                                         cout << "You moved to " << nextRoom->getName() << "." << endl;
                                         break;
                                     }
@@ -364,6 +374,54 @@ int World::play() {
 
                         if (!found) {
                             cout << "There is no " << parameter << " in the room." << endl;
+                        }
+                    }
+                }
+                // Equip action
+                // Select a item to equip
+                else if (command == "equip") {
+                    if (parameter.empty()) {
+                        cout << "Indicate an item to equip." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        list<Item*> items = player->getItems();
+                        for (Item* item : items) {
+                            if (item->getName() == parameter) {
+                                found = true;
+                                if (getPlayer()->equipItem(item)) {
+                                    cout << "You equipped " << item->getName() << endl;
+                                }
+                                else {
+                                    cout << "You can't equip " << item->getName() << endl;
+                                }
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "There is no " << parameter << " in your inventory." << endl;
+                        }
+                    }
+                }
+                // Unequip action
+                // Select a item to equip
+                else if (command == "unequip") {
+                    if (parameter.empty()) {
+                        cout << "Indicate an item to unequip." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        list<Item*> items = player->getEquippedIems();
+                        for (Item* item : items) {
+                            if (item->getName() == parameter) {
+                                found = true;
+                                getPlayer()->unequipItem(item);
+                                cout << "You unequipped " << item->getName() << endl;
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "There is no " << parameter << " in your inventory." << endl;
                         }
                     }
                 }
