@@ -30,7 +30,7 @@ public:
 	list<Item*> getEquippedIems();
 
 	void takeDamage(int damage);
-	void makeAttack(Creature* target);
+	int makeAttack(Creature* target);
 
 private:
 	Room* location;

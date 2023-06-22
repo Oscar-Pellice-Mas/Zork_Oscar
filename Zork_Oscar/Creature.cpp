@@ -75,15 +75,15 @@ list<Item*> Creature::getEquippedIems() {
 }
 
 void Creature::takeDamage(int damage) {
-    int actualDamage = damage - defense;
-    if (actualDamage > 0) {
-        health -= actualDamage;
+    if (damage > 0) {
+        health -= damage;
     }
 }
 
-void Creature::makeAttack(Creature* target) {
+int Creature::makeAttack(Creature* target) {
     int damage = attack - target->getDefense();
     if (damage > 0) {
         target->takeDamage(damage);
     }
+    return damage;
 }

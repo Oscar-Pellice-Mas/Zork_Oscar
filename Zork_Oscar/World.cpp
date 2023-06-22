@@ -26,8 +26,8 @@ World::World() {
     room3->addItem(sword);
 
     // Create player and NPC
-    Player* player = new Player("Player", "The main character", room1, 100, 10, 5);
-    Creature* npc = new Creature("NPC", "A non-player character", room2, 80, 8, 4);
+    Player* player = new Player("Player", "The main character", room1, 20, 10, 5);
+    Creature* npc = new Creature("NPC", "A non-player character", room2, 20, 10, 5);
     room2->addCreature(npc);
 
     // Add player and NPC to the world
@@ -167,12 +167,12 @@ int World::play() {
         if (spacePos != string::npos) {
             command = input.substr(0, spacePos);
             parameter = input.substr(spacePos + 1);
-            transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
+            parameter = stringToLower(parameter);
         }
         else {
             command = input;
         }
-        transform(command.begin(), command.end(), command.begin(), ::tolower);
+        command = stringToLower(command);
  
         // Matches synonims giving the user input
         bool commandMatched = false;
@@ -195,7 +195,8 @@ int World::play() {
                     cout << "- drop [item]: Drop an item from your inventory." << endl;
                     cout << "- move [direction]: Move to another room." << endl;
                     cout << "- open [exit]: Open a door in the room." << endl;
-                    cout << "- attack [creature]: Open a door in the room." << endl;
+                    cout << "- attack [creature]: Attack a creature." << endl;
+                    cout << "- talk [creature]: Talk with a creature." << endl;
                     cout << "- quit: Quit the game." << endl;
                 }
                 // Look action
@@ -220,7 +221,8 @@ int World::play() {
                     }
                     else {
                         for (Creature* creature : creatures) {
-                            cout << creature->getName() << ", ";
+                            if (creature->getHealth() > 0) cout << creature->getName() << ", ";
+                            else cout << "The corpse of " << creature->getName() << ", ";
                         }
                     }
                     cout << endl;
@@ -367,7 +369,7 @@ int World::play() {
                 // Select a creature and makes an attack
                 else if (command == "attack") {
                     if (parameter.empty()) {
-                        cout << "Indicate an target to attack." << endl;
+                        cout << "Indicate a target to attack." << endl;
                     }
                     else {
                         bool found = false;
@@ -376,7 +378,14 @@ int World::play() {
                         for (Creature* creature : creatures) {
                             if (stringToLower(creature->getName()) == parameter) {
                                 found = true;
-                                getPlayer()->makeAttack(creature);
+                                int damage = getPlayer()->makeAttack(creature);
+                                cout << "You deal " << damage << " points of damage to " << creature->getName() << endl;
+                                if (creature->getHealth() > 0) {
+                                    cout << "The creature is still standing." << creature->getHealth() << endl;
+                                }
+                                else {
+                                    cout << "You slayed the creature." << endl;
+                                }
                             }
                         }
 
