@@ -134,6 +134,7 @@ int World::play() {
         { "attack", { "attack", "fight", "hit"}},
         { "equip", { "equip", "wear" } },
         { "unequip", { "unequip", "remove" } },
+        { "inspect", { "inspect", "investigate" } },
         { "quit", { "quit", "exit" } }
     };
 
@@ -422,6 +423,89 @@ int World::play() {
 
                         if (!found) {
                             cout << "There is no " << parameter << " in your inventory." << endl;
+                        }
+                    }
+                }
+                // Investigate action
+                // Select a item to investigate
+                else if (command == "inspect") {
+                    if (parameter.empty()) {
+                        cout << "Indicate an entity to inspect." << endl;
+                    }
+                    else {
+                        bool found = false;
+
+                        // Equipped items
+                        if (!found) {
+                            list<Item*> items = player->getEquippedIems();
+                            for (Item* item : items) {
+                                if (item->getName() == parameter) {
+                                    found = true;
+                                    cout << "You inspect the " << item->getName() << " you have equiped." << endl;
+                                    cout << item->getDescription() << endl;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Inventory items
+                        if (!found) {
+                            list<Item*> items = player->getItems();
+                            for (Item* item : items) {
+                                if (item->getName() == parameter) {
+                                    found = true;
+                                    cout << "You inspect the " << item->getName() << " on your inventory." << endl;
+                                    cout << item->getDescription() << endl;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Room exits
+                        if (!found) {
+                            Room* currentRoom = player->getLocation();
+                            list<Exit*> exits = currentRoom->getExits();
+                            for (Exit* exit : exits) {
+                                if (exit->getName() == parameter) {
+                                    found = true;
+                                    cout << "You inspect the " << exit->getName() << " on the room." << endl;
+                                    cout << exit->getDescription() << endl;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Room items
+                        if (!found) {
+                            Room* currentRoom = player->getLocation();
+                            list<Item*> items = currentRoom->getItems();
+                            for (Item* item : items) {
+                                if (item->getName() == parameter) {
+                                    found = true;
+                                    cout << "You inspect the " << item->getName() << " on the room." << endl;
+                                    cout << item->getDescription() << endl;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Creatures
+                        if (!found) {
+                            Room* currentRoom = player->getLocation();
+                            list<Creature*> creatures = currentRoom->getCreatures();
+                            for (Creature* creature : creatures) {
+                                if (creature->getName() == parameter) {
+                                    found = true;
+                                    cout << "You inspect the " << creature->getName() << " on the room." << endl;
+                                    cout << creature->getDescription() << endl;
+                                    break;
+                                }
+                            }
+                        }
+
+
+                        if (!found) {
+                            cout << "There is no " << parameter << " to inspect." << endl;
                         }
                     }
                 }
