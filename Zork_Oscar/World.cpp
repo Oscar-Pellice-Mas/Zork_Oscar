@@ -37,8 +37,8 @@ World::World() {
     Creature* npc = new Creature("NPC", "A non-player character", room2, 80, 8, 4);
 
     // Add player and NPC to the world
-    addPlayer(player);
-    addEntity(npc);
+    setPlayer(player);
+    setEntity(npc);
 
 }
 
@@ -50,18 +50,22 @@ World::~World() {
 	entities.clear();
 }
 
-void World::addEntity(Entity* entity) {
+// Entities setter
+void World::setEntity(Entity* entity) {
     entities.push_back(entity);
 }
 
+// Entites getter
 list<Entity*> World::getEntities() const {
     return entities;
 }
 
-void World::addPlayer(Player* player) {
+// Plater setter
+void World::setPlayer(Player* player) {
     World::player = player;
 }
 
+// Player getter
 Player* World::getPlayer() {
     return player;
 }
@@ -83,7 +87,8 @@ bool matchesSynonyms(string command, const vector<string>& synonyms) {
     return false;
 }
 
-Direction translateDirection(string parameter) {
+// Transforms string into Direction enum
+Direction stringToDir(string parameter) {
     transform(parameter.begin(), parameter.end(), parameter.begin(), ::tolower);
     if (parameter == "north") {
         return Direction::NORTH;
@@ -102,20 +107,20 @@ Direction translateDirection(string parameter) {
     }
 }
 
-inline const char* DirToString(Direction value)
-{
-    switch (value)
-    {
-    case Direction::NORTH:   return "North";
-    case Direction::EAST:   return "East"; 
+// Transforms Direction enum into a string
+inline const char* DirToString(Direction value) {
+    switch (value) {
+    case Direction::NORTH: return "North";
+    case Direction::EAST: return "East"; 
     case Direction::WEST: return "West";
     case Direction::SOUTH: return "South";
-    default:      return "[Unknown Direction type]";
+    default: return "[Unknown Direction type]";
     }
 }
 
 int World::play() {
     
+    // Create a list of commands synonims
     vector<Command> commands = {
         { "help", { "help", "info" } },
         { "look", { "look", "observe" } },
@@ -140,11 +145,12 @@ int World::play() {
     string input;
     bool gameOver = false;
     while (!gameOver) {
+        // Grab player input
         cout << endl;
         cout << "Enter your action: ";
         getline(cin, input);
 
-
+        // Separates the input into command and parameters
         string command, parameter;
         size_t spacePos = input.find(' ');
         if (spacePos != string::npos) {
@@ -155,7 +161,7 @@ int World::play() {
             command = input;
         }
         
-
+        // Matches synonims giving the user input
         bool commandMatched = false;
         for (const Command& validCommand : commands) {
             if (matchesSynonyms(command, validCommand.synonyms)) {
@@ -165,8 +171,10 @@ int World::play() {
             }
         }
 
+        // Command functionalities
         if (commandMatched) {
             if (commandMatched) {
+                // Help action
                 if (command == "help") {
                     cout << "Available commands:" << endl;
                     cout << "- look: Look around the room." << endl;
@@ -176,6 +184,8 @@ int World::play() {
                     cout << "- open [door]: Open a door in the room." << endl;
                     cout << "- quit: Quit the game." << endl;
                 }
+                // Look action
+                // Shows current room description or inspects an entity if given a parameter
                 else if (command == "look") {
                     Room* currentRoom = player->getLocation();
                     //system("cls");
@@ -217,64 +227,132 @@ int World::play() {
                     }
 
                 }
+                // Take action
+                // If given an item and its found on the room, add it to inventory
                 else if (command == "take") {
-                    string itemName = parameter;
-                    Room* currentRoom = player->getLocation();
-                    list<Item*> items = currentRoom->getItems();
-                    for (Item* item : items) {
-                        if (item->getName() == itemName) {
-                            player->addItem(item);
-                            currentRoom->removeItem(item);
-                            cout << "You took the " << item->getName() << "." << endl;
-                            break;
+                    if (parameter.empty()) {
+                        cout << "Indicate an item to take." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        string itemName = parameter;
+                        Room* currentRoom = player->getLocation();
+                        list<Item*> items = currentRoom->getItems();
+                        for (Item* item : items) {
+                            if (item->getName() == itemName) {
+                                found = true;
+                                player->addItem(item);
+                                currentRoom->removeItem(item);
+                                cout << "You took the " << item->getName() << "." << endl;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "You couldn't take " << parameter << "." << endl;
                         }
                     }
                 }
+                // Drop action
+                // If given an item and its found on the inventory, add it to the room
                 else if (command == "drop") {
-                    string itemName = parameter;
-                    Room* currentRoom = player->getLocation();
-                    list<Item*> items = player->getItems();
-                    for (Item* item : items) {
-                        if (item->getName() == itemName) {
-                            player->removeItem(item);
-                            currentRoom->addItem(item);
-                            cout << "You dropped the " << item->getName() << "." << endl;
-                            break;
+                    if (parameter.empty()) {
+                        cout << "Indicate an item to drop." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        string itemName = parameter;
+                        Room* currentRoom = player->getLocation();
+                        list<Item*> items = player->getItems();
+                        for (Item* item : items) {
+                            if (item->getName() == itemName) {
+                                found = true;
+                                player->removeItem(item);
+                                currentRoom->addItem(item);
+                                cout << "You dropped the " << item->getName() << "." << endl;
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "You couldn't take " << parameter << "." << endl;
                         }
                     }
+                    
                 }
+                // Move action
+                // If given a direction, move to the room if exit is existent
                 else if (command == "move") {
-                    string direction = parameter;
-                    Room* currentRoom = player->getLocation();
-                    list<Exit*> exits = currentRoom->getExits();
-                    for (Exit* exit : exits) {
-                        if (exit->getDirection() == translateDirection(direction)) {
-                            Room* nextRoom = exit->getDestination();
-                            player->setLocation(nextRoom);
-                            cout << "You moved to " << nextRoom->getName() << "." << endl;
-                            break;
-                        }
+                    if (parameter.empty()) {
+                        cout << "Indicate an direction to move." << endl;
                     }
-                }
-                else if (command == "open") {
-                    string doorName = parameter;
-                    Room* currentRoom = player->getLocation();
-                    list<Exit*> exits = currentRoom->getExits();
-                    for (Exit* exit : exits) {
-                        if (exit->isLocked()) {
-                            if (player->removeItem(exit->getKey())) {
-                                exit->unlock(exit->getKey());
-                                cout << "You unlocked the door using the " << exit->getKey()->getName() << "." << endl;
-                            }
-                            else {
-                                cout << "The door is locked, and you don't have the key." << endl;
-                            }
+                    else {
+                        bool found = false;
+                        Direction desiredDir = stringToDir(parameter);
+                        if (desiredDir == Direction::INCORRECT) {
+                            cout << "Indicate a valid direction to move." << endl;
                         }
                         else {
-                            cout << "The door is already open." << endl;
+                            Room* currentRoom = player->getLocation();
+                            list<Exit*> exits = currentRoom->getExits();
+                            for (Exit* exit : exits) {
+                                if (exit->getDirection() == desiredDir) {
+                                    found = true;
+                                    if (exit->isLocked()) {
+                                        cout << "You can't move to " << parameter << ". The " << exit->getName() << " is locked." << endl;
+                                    }
+                                    else {
+                                        Room* nextRoom = exit->getDestination();
+                                        player->setLocation(nextRoom);
+                                        cout << "You moved to " << nextRoom->getName() << "." << endl;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!found) {
+                                cout << "You couldn't move to " << parameter << "." << endl;
+                            }
+                        }
+                        
+                    }
+                }
+                // Open action
+                // If given a targer, open the exit if locked.
+                else if (command == "open") {
+                    if (parameter.empty()) {
+                        cout << "Indicate an exit to unlock." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        Room* currentRoom = player->getLocation();
+                        list<Exit*> exits = currentRoom->getExits();
+                        for (Exit* exit : exits) {
+                            if (exit->getName() == parameter) {
+                                found = true;
+                                if (exit->isLocked()) {
+                                    if (player->removeItem(exit->getKey())) {
+                                        exit->unlock(exit->getKey());
+                                        cout << "You unlocked the door using the " << exit->getKey()->getName() << "." << endl;
+                                    }
+                                    else {
+                                        cout << "The door is locked, and you couldn't open it." << endl;
+                                    }
+                                }
+                                else {
+                                    cout << "The door is already open." << endl;
+                                }
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "There is no " << parameter << " to open." << endl;
                         }
                     }
                 }
+                // Exit action
+                // Quits the game
                 else if (command == "quit") {
                     gameOver = true;
                     cout << "Goodbye!" << endl;

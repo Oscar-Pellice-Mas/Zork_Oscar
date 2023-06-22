@@ -16,10 +16,10 @@ public:
 	World();
 	~World();
 
-	void addEntity(Entity* entity);
+	void setEntity(Entity* entity);
 	list<Entity*> getEntities() const;
 
-	void addPlayer(Player* player);
+	void setPlayer(Player* player);
 	Player* getPlayer();
 
 	int play();
