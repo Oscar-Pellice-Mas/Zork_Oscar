@@ -8,19 +8,19 @@ class Room;
 
 using namespace std;
 
-enum ItemType {
-	COMMON,
-	WEAPON,
-	ARMOUR
-};
-
 class Item : public Entity {
 public:
-	Item(const char* name, const char* description, ItemType itemType);
+	Item(const char* name, const char* description, bool equipable, int attack, int defense);
 	~Item();
 
+	int getAttack() const;
+	int getDefense() const;
+	bool isEquipable() const;
+
 private:
-	ItemType itemType;
+	bool equipable;
+	int attack;
+	int defense;
 };
 
 #endif

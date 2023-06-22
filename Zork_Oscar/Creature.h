@@ -25,10 +25,17 @@ public:
 	int getAttack() const; 
 	int getDefense() const;
 
+	bool equipItem(Item* value);
+	bool unequipItem(Item* value);
+
+	void takeDamage(int damage);
+	void makeAttack(Creature* target);
+
 private:
 	Room* location;
 
 	list<Item*> inventory;
+	list<Item*> equippedItems;
 	int health;
 	int attack;
 	int defense;

@@ -3,9 +3,9 @@
 // ----- Constructor -----
 World::World() {
     // Create items
-    Item* key = new Item("Key", "A key", ItemType::COMMON);
-    Item* box = new Item("Box", "A box", ItemType::COMMON);
-    Item* sword = new Item("Sword", "A sword", ItemType::WEAPON);
+    Item* key = new Item("Key", "A key", false, 0, 0);
+    Item* box = new Item("Box", "A box", true, 1, 0);
+    Item* sword = new Item("Sword", "A sword", true, 10, 0);
 
     // Create rooms
     Room* room1 = new Room("Room 1", "This is the first room.");
@@ -342,6 +342,28 @@ int World::play() {
 
                         if (!found) {
                             cout << "There is no " << parameter << " to open." << endl;
+                        }
+                    }
+                }
+                // Attack action
+                // Select a creature and makes an attack
+                else if (command == "attack") {
+                    if (parameter.empty()) {
+                        cout << "Indicate an target to attack." << endl;
+                    }
+                    else {
+                        bool found = false;
+                        Room* currentRoom = player->getLocation();
+                        list<Creature*> creatures = currentRoom->getCreatures();
+                        for (Creature* creature : creatures) {
+                            if (creature->getName() == parameter) {
+                                found = true;
+                                getPlayer()->makeAttack(creature);
+                            }
+                        }
+
+                        if (!found) {
+                            cout << "There is no " << parameter << " in the room." << endl;
                         }
                     }
                 }

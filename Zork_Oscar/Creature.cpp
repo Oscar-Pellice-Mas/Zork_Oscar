@@ -49,3 +49,45 @@ int Creature::getAttack() const {
 int Creature::getDefense() const {
     return defense;
 }
+
+bool Creature::equipItem(Item* value) {
+    for (Item* item : inventory) {
+        if (item = value) {
+            if (item->isEquipable()) {
+                equippedItems.push_back(item);
+                inventory.remove(value);
+                attack += item->getAttack();
+                defense += item->getDefense();
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Creature::unequipItem(Item* value) {
+    for (Item* item : equippedItems) {
+        if (item = value) {
+            equippedItems.remove(item);
+            inventory.push_back(item);
+            attack -= item->getAttack();
+            defense -= item->getDefense();
+            return true;
+        }
+    }
+    return false;
+}
+
+void Creature::takeDamage(int damage) {
+    int actualDamage = damage - defense;
+    if (actualDamage > 0) {
+        health -= actualDamage;
+    }
+}
+
+void Creature::makeAttack(Creature* target) {
+    int damage = attack - target->getDefense();
+    if (damage > 0) {
+        target->takeDamage(damage);
+    }
+}
