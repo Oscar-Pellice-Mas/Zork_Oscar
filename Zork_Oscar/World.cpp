@@ -1,10 +1,3 @@
-#include "Global.h"
-#include "Entity.h"
-#include "Creature.h"
-#include "Item.h"
-#include "Exit.h"
-#include "Room.h"
-#include "Player.h"
 #include "World.h"
 
 // ----- Constructor -----
@@ -35,6 +28,7 @@ World::World() {
     // Create player and NPC
     Player* player = new Player("Player", "The main character", room1, 100, 10, 5);
     Creature* npc = new Creature("NPC", "A non-player character", room2, 80, 8, 4);
+    room2->addCreature(npc);
 
     // Add player and NPC to the world
     setPlayer(player);
@@ -275,7 +269,7 @@ int World::play() {
                         }
 
                         if (!found) {
-                            cout << "You couldn't take " << parameter << "." << endl;
+                            cout << "You couldn't drop " << parameter << "." << endl;
                         }
                     }
                     

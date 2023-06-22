@@ -6,6 +6,14 @@
 #include <iostream>
 #include <algorithm>
 
+#include "Global.h"
+#include "Entity.h"
+#include "Creature.h"
+#include "Item.h"
+#include "Exit.h"
+#include "Room.h"
+#include "Player.h"
+
 using namespace std;
 
 class Entity;
