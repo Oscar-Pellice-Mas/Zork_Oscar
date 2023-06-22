@@ -32,7 +32,6 @@ private:
 	EntityType type;
 	std::string name;
 	std::string description;
-	list<Entity*> contains;
 };
 
 #endif

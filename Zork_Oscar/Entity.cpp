@@ -21,19 +21,3 @@ string Entity::getDescription() const {
     return description;
 }
 
-void Entity::addEntity(Entity* item) {
-    contains.push_back(item);
-}
-
-bool Entity::removeEntity(Entity* item) {
-    auto it = find(contains.begin(), contains.end(), item);
-    if (it != contains.end()) {
-        contains.erase(it);
-        return true;
-    }
-    return false;
-}
-
-list<Entity*> Entity::getEntity() const {
-    return contains;
-}

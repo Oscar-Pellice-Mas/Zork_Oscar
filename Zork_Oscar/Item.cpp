@@ -23,3 +23,20 @@ int Item::getDefense() const {
 bool Item::isEquipable() const {
     return equipable;
 }
+
+void Item::addEntity(Item* item) {
+    contains.push_back(item);
+}
+
+bool Item::removeEntity(Item* item) {
+    auto it = find(contains.begin(), contains.end(), item);
+    if (it != contains.end()) {
+        contains.erase(it);
+        return true;
+    }
+    return false;
+}
+
+list<Item*> Item::getEntity() const {
+    return contains;
+}

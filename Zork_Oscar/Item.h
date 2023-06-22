@@ -17,10 +17,16 @@ public:
 	int getDefense() const;
 	bool isEquipable() const;
 
+	void addEntity(Item* item);
+	bool removeEntity(Item* item);
+	list<Item*> getEntity() const;
+
 private:
 	bool equipable;
 	int attack;
 	int defense;
+
+	list<Item*> contains;
 };
 
 #endif

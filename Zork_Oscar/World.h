@@ -32,6 +32,18 @@ public:
 
 	int play();
 
+	void helpCommand();
+	void lookCommand();
+	void takeCommand(string parameter);
+	void dropCommand(string parameter);
+	void moveCommand(string parameter);
+	void openCommand(string parameter);
+	void attackCommand(string parameter);
+	void equipCommand(string parameter);
+	void unequipCommand(string parameter);
+	void inspectCommand(string parameter);
+	void talkCommand(string parameter);
+
 private:
 	list<Entity*> entities;
 	Player* player;
