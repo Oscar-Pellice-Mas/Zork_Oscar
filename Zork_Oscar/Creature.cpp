@@ -6,8 +6,8 @@
 #include "Creature.h"
 
 // ----- Constructor -----
-Creature::Creature(const char* name, const char* description, Room* location, int health, int attack, int defense) :
-    Entity(EntityType::CREATURE, name, description), location(location), health(health), attack(attack), defense(defense){}
+Creature::Creature(const char* name, const char* description, Room* location, int health, int attack, int defense, string talk, Mood mood) :
+    Entity(EntityType::CREATURE, name, description), location(location), health(health), attack(attack), defense(defense), talk(talk), mood(PASSIVE){}
 
 // ----- Deconstructor -----
 Creature::~Creature() {
@@ -90,4 +90,16 @@ int Creature::makeAttack(Creature* target) {
         target->takeDamage(damage);
     }
     return damage;
+}
+
+string Creature::getTalk() {
+    return talk;
+}
+
+Mood Creature::getMood() {
+    return mood;
+}
+
+void Creature::setMood(Mood value) {
+    mood = value;
 }

@@ -7,7 +7,7 @@
 
 // ----- Constructor -----
 Player::Player(const char* name, const char* description, Room* location, int health, int attack, int defense)
-    : Creature(name, description, location, health, attack, defense) {}
+    : Creature(name, description, location, health, attack, defense, "Nothing to say", PASSIVE) {}
 
 // ----- Deconstructor -----
 Player::~Player() {
@@ -74,10 +74,10 @@ void Player::helpCommand() {
     cout << "- take [item]: Take an item from the room." << endl;
     cout << "- take [item] from [item]: Take an item from another item." << endl;
     cout << "- drop [item]: Drop an item from your inventory." << endl;
-    cout << "- drop [item] into [item]: Drop an item into anotther item." << endl;
     cout << "- move [direction]: Move to another room." << endl;
     cout << "- open [exit]: Open a door in the room." << endl;
     cout << "- attack [creature]: Attack a creature." << endl;
+    cout << "- talk [creature]: Talk with a creature." << endl;
     cout << "- inspect [entity]: Inspect an entity." << endl;
     cout << "- inventory : Shows the items of the player." << endl;
     cout << "- quit: Quit the game." << endl;
@@ -338,20 +338,15 @@ bool Player::attackCommand(string parameter) {
                 // Apply damage
                 int damage = makeAttack(creature);
                 if (creature->getHealth() > 0) {
-                    damage = creature->makeAttack(this);
+                    creature->setMood(AGRESSIVE);
                     printBase();
                     cout << "You deal " << damage << " DMG to " << creature->getName() << endl;
                     cout << "The creature is still standing with " << creature->getHealth() << " Health." << endl;
-                    cout << "The " << creature->getName() << " attacks you for " << damage << " DMG." << endl;
-                    if (getHealth() <= 0) {
-                        cout << "You have been slayed!" << endl;
-                        cout << "---------------------------------------" << endl;
-                        return true;
-                    }
                 }
                 else {
                     cout << "You deal " << damage << " DMG to " << creature->getName() << endl;
                     cout << "You slayed the creature." << endl;
+                    creature->setMood(DEAD);
                 }
                 break;
             }
@@ -360,8 +355,8 @@ bool Player::attackCommand(string parameter) {
         if (!found) {
             cout << "There is no " << parameter << " in the room." << endl;
         }
-        return false;
     }
+    return false;
 }
 
 void Player::equipCommand(string parameter) {
@@ -514,4 +509,58 @@ void Player::inventoryCommand() {
             cout << " - " << item->getName() << "." << endl;
         }
     }
+}
+
+bool Player::takeDamage() {
+    Room* currentRoom = getLocation();
+    list<Creature*> creatures = currentRoom->getCreatures();
+    for (Creature* creature : creatures) {
+        if (creature->getMood() == AGRESSIVE) {
+            // Apply damage
+            int damage = creature->makeAttack(this);
+            cout << "---------------------------------------" << endl;
+            cout << "The " << creature->getName() << " sneaks an attack to you for " << damage << " DMG." << endl;
+                
+            if (getHealth() <= 0) {
+                cout << "You have been slayed!" << endl;
+                cout << "---------------------------------------" << endl;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Player::talkCommand(string parameter) {
+    if (parameter.empty()) {
+        cout << "Indicate a target to talk." << endl;
+    }
+    else {
+        bool found = false;
+        Room* currentRoom = getLocation();
+        list<Creature*> creatures = currentRoom->getCreatures();
+        for (Creature* creature : creatures) {
+            if (stringToLower(creature->getName()) == parameter) {
+                found = true;
+                // Check if creature is alive
+                if (creature->getMood() == DEAD) {
+                    cout << "The " << parameter << " is already dead." << endl;
+                    return;
+                }
+                else if (creature->getMood() == AGRESSIVE) {
+                    cout << "The " << creature->getName() << " is agressive: " << endl;
+                    cout << "Doesn't want to talk. He is comming to hit you!" << endl;
+                }
+                else {
+                    cout << "The " << creature->getName() << " says: " << endl;
+                    cout << creature->getTalk()  << endl;
+                }
+            }
+        }
+
+        if (!found) {
+            cout << "There is no " << parameter << " in the room." << endl;
+        }
+    }
+    return;
 }

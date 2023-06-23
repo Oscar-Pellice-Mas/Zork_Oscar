@@ -13,7 +13,7 @@ World::World() {
     setEntity(sword);
     Item* dagger = new Item("Dagger", "A rusty dagger. It's about to break.", true, 5, 0);
     setEntity(dagger);
-    Item* armor = new Item("Armor", "A sturdy armor. It will ensure you don't get damaged.", true, 0, 10);
+    Item* armor = new Item("Armor", "A sturdy armor. It will ensure you don't get damaged.", true, 0, 5);
     setEntity(armor);
     Item* note = new Item("Note", "It reads: This sword is good but you should visit the armory.", false, 0, 0);
     setEntity(note);
@@ -94,9 +94,9 @@ World::World() {
     // Create player and NPC
     Player* player = new Player("Player", "The main character.", cell, 20, 10, 5);
     setEntity(player);
-    Creature* goblin = new Creature("Goblin", "A small goblin with a knife.", hallway, 11, 10, 5);
+    Creature* goblin = new Creature("Goblin", "A small goblin with a knife.", hallway, 11, 10, 5, "Go back to your cell!", PASSIVE);
     setEntity(goblin);
-    Creature* boss = new Creature("Boss", "A big and bad goblin.", garden, 20, 15, 10);
+    Creature* boss = new Creature("Boss", "A big and bad goblin.", garden, 20, 20, 10, "They pay me to trap you here.", PASSIVE);
     setEntity(boss);
     hallway->addCreature(goblin);
     garden->addCreature(boss);
@@ -193,6 +193,7 @@ int World::play() {
         { "unequip", { "unequip", "remove" } },
         { "inspect", { "inspect", "investigate" } },
         { "inventory", { "inventory", "items" } },
+        { "talk", { "talk", "speak" } },
         { "quit", { "quit", "exit" } }
     };
 
@@ -236,71 +237,79 @@ int World::play() {
 
         // Command functionalities
         if (commandMatched) {
-            if (commandMatched) {
-                // Help action
-                if (command == "help") {
-                    player->helpCommand();
-                }
-                // Look action
-                // Shows current room description or inspects an entity if given a parameter
-                else if (command == "look") {
-                    player->lookCommand();
-                }
-                // Take action
-                // If given an item and its found on the room, add it to inventory
-                else if (command == "take") {
-                    if (parameters.size() == 1) player->takeCommand(parameter);
-                    else player->takeCommand(parameters);
-                }
-                // Drop action
-                // If given an item and its found on the inventory, add it to the room
-                else if (command == "drop") {
-                    player->dropCommand(parameter);
-                }
-                // Move action
-                // If given a direction, move to the room if exit is existent
-                else if (command == "move") {
-                    if (player->moveCommand(parameter)) {
-                        gameOver = true;
-                    }
-                }
-                // Open action
-                // If given a targer, open the exit if locked.
-                else if (command == "open") {
-                    player->openCommand(parameter);
-                }
-                // Attack action
-                // Select a creature and makes an attack
-                else if (command == "attack") {
-                    if (player->attackCommand(parameter)) gameOver = true;
-                }
-                // Equip action
-                // Select a item to equip
-                else if (command == "equip") {
-                    player->equipCommand(parameter);
-                }
-                // Unequip action
-                // Select a item to equip
-                else if (command == "unequip") {
-                    player->unequipCommand(parameter);
-                }
-                // Investigate action
-                // Select a item to investigate
-                else if (command == "inspect") {
-                    player->inspectCommand(parameter);
-                }
-                // Inventory action
-                // Shows inventory of the player
-                else if (command == "inventory") {
-                    player->inventoryCommand();
-                }
-                // Exit action
-                // Quits the game
-                else if (command == "quit") {
+            // Help action
+            if (command == "help") {
+                player->helpCommand();
+            }
+            // Look action
+            // Shows current room description or inspects an entity if given a parameter
+            else if (command == "look") {
+                player->lookCommand();
+            }
+            // Take action
+            // If given an item and its found on the room, add it to inventory
+            else if (command == "take") {
+                if (parameters.size() == 1) player->takeCommand(parameter);
+                else player->takeCommand(parameters);
+            }
+            // Drop action
+            // If given an item and its found on the inventory, add it to the room
+            else if (command == "drop") {
+                player->dropCommand(parameter);
+            }
+            // Move action
+            // If given a direction, move to the room if exit is existent
+            else if (command == "move") {
+                if (player->moveCommand(parameter)) {
                     gameOver = true;
-                    cout << "Goodbye!" << endl; 
-                    cout << "---------------------------------------" << endl;
                 }
+            }
+            // Open action
+            // If given a targer, open the exit if locked.
+            else if (command == "open") {
+                player->openCommand(parameter);
+            }
+            // Attack action
+            // Select a creature and makes an attack
+            else if (command == "attack") {
+                if (player->attackCommand(parameter)) gameOver = true;
+            }
+            // Equip action
+            // Select a item to equip
+            else if (command == "equip") {
+                player->equipCommand(parameter);
+            }
+            // Unequip action
+            // Select a item to equip
+            else if (command == "unequip") {
+                player->unequipCommand(parameter);
+            }
+            // Investigate action
+            // Select a item to investigate
+            else if (command == "inspect") {
+                player->inspectCommand(parameter);
+            }
+            // Inventory action
+            // Shows inventory of the player
+            else if (command == "inventory") {
+                player->inventoryCommand();
+            }
+            // Talk action
+            // Talks with a creature
+            else if (command == "talk") {
+                player->talkCommand(parameter);
+            }
+            // Exit action
+            // Quits the game
+            else if (command == "quit") {
+                gameOver = true;
+                cout << "Goodbye!" << endl; 
+                cout << "---------------------------------------" << endl;
+            }
+            
+            // If angry creatures on the room, player gets hit.
+            if (player->takeDamage()) {
+                gameOver = true;
             }
         }
         else {

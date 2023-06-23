@@ -26,6 +26,9 @@ public:
 	void unequipCommand(string parameter);
 	void inspectCommand(string parameter);
 	void inventoryCommand();
+	void talkCommand(string parameter);
+
+	bool takeDamage();
 private:
 
 };
