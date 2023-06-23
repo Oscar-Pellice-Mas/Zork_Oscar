@@ -53,6 +53,9 @@ void Player::printBase() {
     system("CLS");
     cout << "_-- Zork --_" << endl;
     cout << "---------------------------------------" << endl;
+    cout << "Health: " << getHealth() << endl;
+    cout << "Attack: " << getAttack() << " | Defense: " << getDefense() << endl;
+    cout << "---------------------------------------" << endl << endl;
     cout << "Location: " << getLocation()->getName() << endl;
     cout << getLocation()->getDescription() << endl;
     cout << endl;
@@ -305,7 +308,7 @@ void Player::openCommand(string parameter) {
     }
 }
 
-void Player::attackCommand(string parameter) {
+bool Player::attackCommand(string parameter) {
     if (parameter.empty()) {
         cout << "Indicate a target to attack." << endl;
     }
@@ -319,16 +322,25 @@ void Player::attackCommand(string parameter) {
                 // Check if creature is alive
                 if (creature->getHealth() <= 0) {
                     cout << "The " << parameter << " is already dead." << endl;
-                    return;
+                    return false;
                 }
 
                 // Apply damage
                 int damage = makeAttack(creature);
-                cout << "You deal " << damage << " points of damage to " << creature->getName() << endl;
                 if (creature->getHealth() > 0) {
-                    cout << "The creature is still standing." << creature->getHealth() << endl;
+                    damage = creature->makeAttack(this);
+                    printBase();
+                    cout << "You deal " << damage << " DMG to " << creature->getName() << endl;
+                    cout << "The creature is still standing with " << creature->getHealth() << " Health." << endl;
+                    cout << "The " << creature->getName() << " attacks you for " << damage << " DMG." << endl;
+                    if (getHealth() <= 0) {
+                        cout << "You have been slayed!" << endl;
+                        cout << "---------------------------------------" << endl;
+                        return true;
+                    }
                 }
                 else {
+                    cout << "You deal " << damage << " DMG to " << creature->getName() << endl;
                     cout << "You slayed the creature." << endl;
                 }
                 break;
@@ -338,6 +350,7 @@ void Player::attackCommand(string parameter) {
         if (!found) {
             cout << "There is no " << parameter << " in the room." << endl;
         }
+        return false;
     }
 }
 

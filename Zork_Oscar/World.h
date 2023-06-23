@@ -29,12 +29,16 @@ public:
 	void setPlayer(Player* player);
 	Player* getPlayer();
 
+	void setGameover();
+
 	int play();
 
 
 private:
 	list<Entity*> entities;
 	Player* player;
+
+	bool gameOver;
 };
 
 #endif

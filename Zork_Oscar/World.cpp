@@ -4,40 +4,69 @@
 World::World() {
     // Create items
     Item* key = new Item("Key", "A small intricate key. Must be usefull to open a door.", false, 0, 0);
+    setEntity(key);
     Item* box = new Item("Box", "A metal box. It has something inside.", true, 1, 0);
+    setEntity(box);
     Item* stick = new Item("Stick", "A wooden stick. It must hurt to hit with this.", true, 2, 0);
+    setEntity(stick);
     Item* sword = new Item("Sword", "A well forged sword. It will cut through enemies.", true, 10, 0);
+    setEntity(sword);
     Item* dagger = new Item("Dagger", "A rusty dagger. It's about to break.", true, 5, 0);
+    setEntity(dagger);
     Item* armor = new Item("Armor", "A sturdy armor. It will ensure you don't get damaged.", true, 0, 10);
+    setEntity(armor);
     Item* note = new Item("Note", "It reads: This sword is good but you should visit the armory.", false, 0, 0);
+    setEntity(note);
     Item* money = new Item("Money", "A good stack of money.", false, 0, 0);
+    setEntity(money);
     Item* goldKey = new Item("Gold key", "A key to freedom.", false, 0, 0);
+    setEntity(goldKey);
 
     box->addItems(key);
 
     // Create rooms
     Room* cell = new Room("Cell", "This is an empty, ugly and small cell.");
+    setEntity(cell);
     Room* room = new Room("Room", "A cozy living room with a table and a chair.");
+    setEntity(room);
     Room* armory = new Room("Armory", "A well-equipped goblin armory.");
+    setEntity(armory);
     Room* hallway = new Room("Hallway", "A narrow hallway that connects rooms.");
+    setEntity(hallway);
     Room* study = new Room("Study", "A quiet study room filled with books.");
+    setEntity(study);
     Room* garden = new Room("Garden", "A beautiful garden with colorful flowers.");
+    setEntity(garden);
     Room* outside = new Room("Outside", "You are out. You are free!");
+    setEntity(outside);
 
     // Create exits
-    Exit* cellDoor = new Exit("Cell Door", "A door with metal bars.", Direction::EAST, cell, room, DoorState::OPEN, NULL);
-    Exit* cellDoor2 = new Exit("Cell Door", "A door with metal bars.", Direction::WEST, room, cell, DoorState::OPEN, NULL);
-    Exit* metalDoor = new Exit("Metal Door", "A metal door with a lock. It reads: Armory.", Direction::EAST, room, armory, DoorState::CLOSED, key);
-    Exit* metalDoor2 = new Exit("Metal Door", "A metal door.", Direction::WEST, armory, room, DoorState::OPEN, NULL);
+    Exit* cellDoor = new Exit("CellDoor", "A door with metal bars.", Direction::EAST, cell, room, DoorState::OPEN, NULL);
+    setEntity(cellDoor);
+    Exit* cellDoor2 = new Exit("CellDoor", "A door with metal bars.", Direction::WEST, room, cell, DoorState::OPEN, NULL);
+    setEntity(cellDoor2);
+    Exit* metalDoor = new Exit("MetalDoor", "A metal door with a lock. It reads: Armory.", Direction::EAST, room, armory, DoorState::CLOSED, key);
+    setEntity(metalDoor);
+    Exit* metalDoor2 = new Exit("MetalDoor", "A metal door.", Direction::WEST, armory, room, DoorState::OPEN, NULL);
+    setEntity(metalDoor2);
     Exit* window = new Exit("Window", "A big window with views on the garden.", Direction::SOUTH, armory, garden, DoorState::OPEN, NULL);
+    setEntity(window);
     Exit* window2 = new Exit("Window", "A big window. It's a bit too high", Direction::NORTH, armory, garden, DoorState::CLOSED, NULL);
+    setEntity(window2);
     Exit* passage = new Exit("Passage", "A passage that leads to a hallway.", Direction::SOUTH, room, hallway, DoorState::OPEN, NULL);
+    setEntity(passage);
     Exit* passage2 = new Exit("Passage", "A passage that leads to a room.", Direction::NORTH, hallway, room, DoorState::OPEN, NULL);
-    Exit* studyDoor = new Exit("Wood Door", "An intricate wooden door.", Direction::EAST, hallway, study, DoorState::OPEN, NULL);
-    Exit* studyDoor2 = new Exit("Wood Door", "An intricate wooden door.", Direction::WEST, study, hallway, DoorState::OPEN, NULL);
-    Exit* gardenDoor = new Exit("Glass Door", "The garden can be seen through the door glass.", Direction::EAST, study, garden, DoorState::OPEN, NULL);
-    Exit* gardenDoor2 = new Exit("Glass Door", "The study can be seen through the door glass.", Direction::WEST, garden, study, DoorState::OPEN, NULL);
-    Exit* exitDoor = new Exit("Exit Door", "The door to the outside. It has a lock.", Direction::WEST, garden, study, DoorState::CLOSED, goldKey);
+    setEntity(passage2);
+    Exit* studyDoor = new Exit("WoodDoor", "An intricate wooden door.", Direction::EAST, hallway, study, DoorState::OPEN, NULL);
+    setEntity(studyDoor);
+    Exit* studyDoor2 = new Exit("WoodDoor", "An intricate wooden door.", Direction::WEST, study, hallway, DoorState::OPEN, NULL);
+    setEntity(studyDoor2);
+    Exit* gardenDoor = new Exit("GlassDoor", "The garden can be seen through the door glass.", Direction::EAST, study, garden, DoorState::OPEN, NULL);
+    setEntity(gardenDoor);
+    Exit* gardenDoor2 = new Exit("GlassDoor", "The study can be seen through the door glass.", Direction::WEST, garden, study, DoorState::OPEN, NULL);
+    setEntity(gardenDoor2);
+    Exit* exitDoor = new Exit("ExitDoor", "The door to the outside. It has a lock.", Direction::WEST, garden, study, DoorState::CLOSED, goldKey);
+    setEntity(exitDoor);
 
     // Add exits to rooms
     cell->addExit(cellDoor);
@@ -63,15 +92,14 @@ World::World() {
 
     // Create player and NPC
     Player* player = new Player("Player", "The main character.", cell, 20, 10, 5);
+    setEntity(player);
     Creature* goblin = new Creature("Goblin", "A small goblin with a knife.", hallway, 11, 10, 5);
+    setEntity(goblin);
     Creature* boss = new Creature("Boss", "A big and bad goblin.", garden, 20, 15, 10);
+    setEntity(boss);
     hallway->addCreature(goblin);
     garden->addCreature(boss);
-
-    // Add player and NPC to the world
     setPlayer(player);
-    setEntity(goblin);
-    setEntity(boss);
 
 }
 
@@ -101,6 +129,10 @@ void World::setPlayer(Player* player) {
 // Player getter
 Player* World::getPlayer() {
     return player;
+}
+
+void World::setGameover() {
+    gameOver = true;
 }
 
 // Struct to represent a command and its synonyms
@@ -164,14 +196,9 @@ int World::play() {
     };
 
     // Game loop
-    system("CLS");
-    cout << "_-- Zork --_" << endl;
-    cout << "---------------------------------------" << endl;
-    cout << "Location: " << player->getLocation()->getName() << endl;
-    cout << player->getLocation()->getDescription() << endl;
+    player->printBase();
 
     string input;
-    bool gameOver = false;
     while (!gameOver) {
 
         // Grab player input
@@ -242,7 +269,7 @@ int World::play() {
                 // Attack action
                 // Select a creature and makes an attack
                 else if (command == "attack") {
-                    player->attackCommand(parameter);
+                    if (player->attackCommand(parameter)) gameOver = true;
                 }
                 // Equip action
                 // Select a item to equip
@@ -268,7 +295,8 @@ int World::play() {
                 // Quits the game
                 else if (command == "quit") {
                     gameOver = true;
-                    cout << "Goodbye!" << endl;
+                    cout << "Goodbye!" << endl; 
+                    cout << "---------------------------------------" << endl;
                 }
             }
         }

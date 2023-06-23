@@ -21,7 +21,7 @@ public:
 	void dropCommand(string parameter);
 	void moveCommand(string parameter);
 	void openCommand(string parameter);
-	void attackCommand(string parameter);
+	bool attackCommand(string parameter);
 	void equipCommand(string parameter);
 	void unequipCommand(string parameter);
 	void inspectCommand(string parameter);
