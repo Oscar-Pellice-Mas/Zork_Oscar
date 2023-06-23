@@ -28,6 +28,8 @@ public:
 	Exit(const char* name, const char* description, Direction direction, Room* source, Room* destination, DoorState state, Item* key);
 	~Exit();
 
+	string getDescription() const;
+
 	Direction getDirection() const;
 	Room* getSource() const;
 	Room* getDestination() const;

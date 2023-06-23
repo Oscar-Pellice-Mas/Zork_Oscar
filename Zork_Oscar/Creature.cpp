@@ -13,6 +13,10 @@ Creature::Creature(const char* name, const char* description, Room* location, in
 Creature::~Creature() {
 }
 
+string Creature::getDescription() const {
+    return Entity::getDescription();
+}
+
 Room* Creature::getLocation() const {
     return location;
 }

@@ -12,6 +12,10 @@ Room::Room(const char* name, const char* description) : Entity(EntityType::ROOM,
 Room::~Room() {
 }
 
+string Room::getDescription() const {
+    return Entity::getDescription();
+}
+
 void Room::addItem(Item* item) {
     items.push_back(item);
 }

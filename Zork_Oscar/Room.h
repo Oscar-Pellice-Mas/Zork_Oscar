@@ -16,6 +16,8 @@ public:
     Room(const char* name, const char* description);
 	~Room();
 
+    string getDescription() const;
+
     void addItem(Item* item);
     bool removeItem(Item* item);
     list<Item*> getItems() const;

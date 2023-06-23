@@ -14,6 +14,8 @@ public:
 	Creature(const char* name, const char* description, Room* location, int health, int attack, int defense);
 	~Creature();
 
+	string getDescription() const;
+
     Room* getLocation() const;
 	void setLocation(Room* room);
 

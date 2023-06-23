@@ -13,6 +13,8 @@ public:
 	Item(const char* name, const char* description, bool equipable, int attack, int defense);
 	~Item();
 
+	string getDescription() const override;
+
 	int getAttack() const;
 	int getDefense() const;
 	bool isEquipable() const;

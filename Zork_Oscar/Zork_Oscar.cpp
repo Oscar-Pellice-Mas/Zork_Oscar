@@ -1,7 +1,3 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <conio.h>
 #include "Global.h"
 #include "World.h"
 
@@ -11,6 +7,4 @@ int main() {
     World world;
 
     world.play();
-
-
 }

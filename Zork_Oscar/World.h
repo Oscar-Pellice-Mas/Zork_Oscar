@@ -4,7 +4,6 @@
 #include <string>
 #include <list>
 #include <iostream>
-#include <algorithm>
 
 #include "Global.h"
 #include "Entity.h"
@@ -32,18 +31,6 @@ public:
 
 	int play();
 
-	void helpCommand();
-	void lookCommand();
-	void takeCommand(string parameter);
-	void takeCommand(list<string> parameter);
-	void dropCommand(string parameter);
-	void moveCommand(string parameter);
-	void openCommand(string parameter);
-	void attackCommand(string parameter);
-	void equipCommand(string parameter);
-	void unequipCommand(string parameter);
-	void inspectCommand(string parameter);
-	void talkCommand(string parameter);
 
 private:
 	list<Entity*> entities;

@@ -22,11 +22,7 @@ public:
 
     EntityType getEntityType() const;
     string getName() const;
-    string getDescription() const;
-
-    void addEntity(Entity* item);
-    bool removeEntity(Entity* item);
-    list<Entity*> getEntity() const;
+    virtual string getDescription() const;
 
 private:
 	EntityType type;

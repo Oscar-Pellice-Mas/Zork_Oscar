@@ -40,3 +40,15 @@ bool Item::removeItems(Item* item) {
 list<Item*> Item::getItems() const {
     return contains;
 }
+
+string Item::getDescription() const {
+    string descriptionReturn = Entity::getDescription();
+    if (!getItems().empty()) {
+        descriptionReturn += ": Contains ";
+        for (Item* item : getItems()) {
+            descriptionReturn += item->getName();
+        }
+        descriptionReturn += ".";
+    }
+    return descriptionReturn;
+}

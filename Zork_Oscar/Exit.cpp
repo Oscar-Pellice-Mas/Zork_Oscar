@@ -10,6 +10,10 @@ Exit::Exit(const char* name, const char* description, Direction direction, Room*
 Exit::~Exit() {
 }
 
+string Exit::getDescription() const {
+    return Entity::getDescription();
+}
+
 Direction Exit::getDirection() const {
     return direction;
 }
