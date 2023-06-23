@@ -5,6 +5,8 @@ This is a simple text mode conversational game.
 Author: Oscar Pellicé
 Github link: https://github.com/Oscar-Pellice-Mas/Zork_Oscar
 
+Guide:
+
 To finish the game there are diferent ways to go, here is one of them:
 - move east
 - take key from box
@@ -20,6 +22,16 @@ To finish the game there are diferent ways to go, here is one of them:
 - take goldenKey
 - unlock exitDoor
 - go east
+
+
+Description:
+
+I have develop the following additional features: RPG stats for player, dialog for creatures, 
+stats for items, equip action, exits locked and opened by specific items, inspect action and inventory.
+
+It has been tricky to get all possible input from the user 
+and try to be as responsibe as possible to get outputs to the client though UI.
+I also tried to make a different UI that refreshes itself and gives the game a different look.
 
 
 License: 
