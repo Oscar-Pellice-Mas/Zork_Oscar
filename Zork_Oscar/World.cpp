@@ -128,6 +128,25 @@ string stringToLower(string value) {
     return lowered;
 }
 
+list<string> separateParameters(const string& input) {
+    list<string> parameters;
+    string parameter;
+    size_t startIndex = 0;
+    size_t spacePos = input.find(' ');
+
+    while (spacePos != string::npos) {
+        parameter = input.substr(startIndex, spacePos - startIndex);
+        parameters.push_back(parameter);
+        startIndex = spacePos + 1;
+        spacePos = input.find(' ', startIndex);
+    }
+
+    parameter = input.substr(startIndex);
+    parameters.push_back(parameter);
+
+    return parameters;
+}
+
 void World::helpCommand() {
     cout << "Available commands:" << endl;
     cout << "- look: Look around the room." << endl;
@@ -200,6 +219,68 @@ void World::takeCommand(string parameter) {
 
         if (!found) {
             cout << "You couldn't take " << parameter << "." << endl;
+        }
+    }
+}
+
+void World::takeCommand(list<string> parameters) {
+    if (parameters.size() < 3) {
+        cout << "Wrong command. Check \"help\" for instructions." << endl;
+    }
+    else {
+        bool recipientFound, itemFound = false;
+
+        // First parameter is container
+        list<string>::iterator it = parameters.begin();
+        string itemContainer = *it;
+        // Second will be ignored for simplicity
+        // Third is the item
+        advance(it, 5);
+        string itemName = *it;
+
+        // Make the search from inventory and room
+        Room* currentRoom = player->getLocation();
+        list<Item*> items = currentRoom->getItems();
+        for (Item* item : items) {
+            if (stringToLower(item->getName()) == stringToLower(itemContainer)) {
+                recipientFound = true;
+                list<Item*> containerItems = item->getItems();
+                for (Item* containerItem : containerItems) {
+                    if (stringToLower(containerItem->getName()) == stringToLower(itemName)) {
+                        player->addItem(item);
+                        containerItem->removeItems(item);
+                        cout << "You took the " << containerItem->getName() << " from the " << item->getName() << "." << endl;
+                        break;
+                    }
+                }
+                
+            }
+        }
+
+        if (!recipientFound || !itemFound) {
+            list<Item*> items = player->getItems();
+            for (Item* item : items) {
+                if (stringToLower(item->getName()) == stringToLower(itemContainer)) {
+                    recipientFound = true;
+                    list<Item*> containerItems = item->getItems();
+                    for (Item* containerItem : containerItems) {
+                        if (stringToLower(containerItem->getName()) == stringToLower(itemName)) {
+                            player->addItem(item);
+                            containerItem->removeItems(item);
+                            cout << "You took the " << containerItem->getName() << " from the " << item->getName() << "." << endl;
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        // Output if items not found
+        if (recipientFound && !itemFound) {
+            cout << "You couldn't find " << itemName << " in " << itemContainer << "." << endl;
+        } else if (!recipientFound) {
+            cout << "You couldn't find " << itemContainer << "." << endl;
         }
     }
 }
@@ -492,11 +573,13 @@ int World::play() {
 
         // Separates the input into command and parameters
         string command, parameter;
+        list<string> parameters;
         size_t spacePos = input.find(' ');
         if (spacePos != string::npos) {
             command = input.substr(0, spacePos);
             parameter = input.substr(spacePos + 1);
             parameter = stringToLower(parameter);
+            parameters = separateParameters(parameter);
         }
         else {
             command = input;

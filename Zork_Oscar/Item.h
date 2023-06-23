@@ -17,9 +17,9 @@ public:
 	int getDefense() const;
 	bool isEquipable() const;
 
-	void addEntity(Item* item);
-	bool removeEntity(Item* item);
-	list<Item*> getEntity() const;
+	void addItems(Item* item);
+	bool removeItems(Item* item);
+	list<Item*> getItems() const;
 
 private:
 	bool equipable;

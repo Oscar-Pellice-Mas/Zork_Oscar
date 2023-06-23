@@ -24,11 +24,11 @@ bool Item::isEquipable() const {
     return equipable;
 }
 
-void Item::addEntity(Item* item) {
+void Item::addItems(Item* item) {
     contains.push_back(item);
 }
 
-bool Item::removeEntity(Item* item) {
+bool Item::removeItems(Item* item) {
     auto it = find(contains.begin(), contains.end(), item);
     if (it != contains.end()) {
         contains.erase(it);
@@ -37,6 +37,6 @@ bool Item::removeEntity(Item* item) {
     return false;
 }
 
-list<Item*> Item::getEntity() const {
+list<Item*> Item::getItems() const {
     return contains;
 }

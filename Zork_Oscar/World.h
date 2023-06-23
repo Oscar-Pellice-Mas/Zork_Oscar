@@ -35,6 +35,7 @@ public:
 	void helpCommand();
 	void lookCommand();
 	void takeCommand(string parameter);
+	void takeCommand(list<string> parameter);
 	void dropCommand(string parameter);
 	void moveCommand(string parameter);
 	void openCommand(string parameter);
