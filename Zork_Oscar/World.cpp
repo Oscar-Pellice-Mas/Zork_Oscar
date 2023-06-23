@@ -3,39 +3,75 @@
 // ----- Constructor -----
 World::World() {
     // Create items
-    Item* key = new Item("Key", "A key", false, 0, 0);
-    Item* box = new Item("Box", "A box", true, 1, 0);
-    Item* pen = new Item("Pen", "A pen", true, 2, 0);
-    Item* sword = new Item("Sword", "A sword", true, 10, 0);
+    Item* key = new Item("Key", "A small intricate key. Must be usefull to open a door.", false, 0, 0);
+    Item* box = new Item("Box", "A metal box. It has something inside.", true, 1, 0);
+    Item* stick = new Item("Stick", "A wooden stick. It must hurt to hit with this.", true, 2, 0);
+    Item* sword = new Item("Sword", "A well forged sword. It will cut through enemies.", true, 10, 0);
+    Item* dagger = new Item("Dagger", "A rusty dagger. It's about to break.", true, 5, 0);
+    Item* armor = new Item("Armor", "A sturdy armor. It will ensure you don't get damaged.", true, 0, 10);
+    Item* note = new Item("Note", "It reads: This sword is good but you should visit the armory.", false, 0, 0);
+    Item* money = new Item("Money", "A good stack of money.", false, 0, 0);
+    Item* goldKey = new Item("Gold key", "A key to freedom.", false, 0, 0);
 
-    box->addItems(pen);
+    box->addItems(key);
 
     // Create rooms
-    Room* room1 = new Room("Room 1", "This is the first room.");
-    Room* room2 = new Room("Room 2", "This is the second room.");
-    Room* room3 = new Room("Room 3", "This is the third room.");
+    Room* cell = new Room("Cell", "This is an empty, ugly and small cell.");
+    Room* room = new Room("Room", "A cozy living room with a table and a chair.");
+    Room* armory = new Room("Armory", "A well-equipped goblin armory.");
+    Room* hallway = new Room("Hallway", "A narrow hallway that connects rooms.");
+    Room* study = new Room("Study", "A quiet study room filled with books.");
+    Room* garden = new Room("Garden", "A beautiful garden with colorful flowers.");
+    Room* outside = new Room("Outside", "You are out. You are free!");
 
     // Create exits
-    Exit* exit1 = new Exit("Door", "A wood door", Direction::NORTH, room1, room2, DoorState::CLOSED, key);
-    Exit* exit2 = new Exit("Window", "An opened window", Direction::SOUTH, room2, room3, DoorState::OPEN, NULL);
+    Exit* cellDoor = new Exit("Cell Door", "A door with metal bars.", Direction::EAST, cell, room, DoorState::OPEN, NULL);
+    Exit* cellDoor2 = new Exit("Cell Door", "A door with metal bars.", Direction::WEST, room, cell, DoorState::OPEN, NULL);
+    Exit* metalDoor = new Exit("Metal Door", "A metal door with a lock. It reads: Armory.", Direction::EAST, room, armory, DoorState::CLOSED, key);
+    Exit* metalDoor2 = new Exit("Metal Door", "A metal door.", Direction::WEST, armory, room, DoorState::OPEN, NULL);
+    Exit* window = new Exit("Window", "A big window with views on the garden.", Direction::SOUTH, armory, garden, DoorState::OPEN, NULL);
+    Exit* window2 = new Exit("Window", "A big window. It's a bit too high", Direction::NORTH, armory, garden, DoorState::CLOSED, NULL);
+    Exit* passage = new Exit("Passage", "A passage that leads to a hallway.", Direction::SOUTH, room, hallway, DoorState::OPEN, NULL);
+    Exit* passage2 = new Exit("Passage", "A passage that leads to a room.", Direction::NORTH, hallway, room, DoorState::OPEN, NULL);
+    Exit* studyDoor = new Exit("Wood Door", "An intricate wooden door.", Direction::EAST, hallway, study, DoorState::OPEN, NULL);
+    Exit* studyDoor2 = new Exit("Wood Door", "An intricate wooden door.", Direction::WEST, study, hallway, DoorState::OPEN, NULL);
+    Exit* gardenDoor = new Exit("Glass Door", "The garden can be seen through the door glass.", Direction::EAST, study, garden, DoorState::OPEN, NULL);
+    Exit* gardenDoor2 = new Exit("Glass Door", "The study can be seen through the door glass.", Direction::WEST, garden, study, DoorState::OPEN, NULL);
+    Exit* exitDoor = new Exit("Exit Door", "The door to the outside. It has a lock.", Direction::WEST, garden, study, DoorState::CLOSED, goldKey);
 
     // Add exits to rooms
-    room1->addExit(exit1);
-    room2->addExit(exit2);
+    cell->addExit(cellDoor);
+    room->addExit(cellDoor2);
+    room->addExit(metalDoor);
+    room->addExit(passage);
+    armory->addExit(metalDoor2);
+    armory->addExit(window);
+    hallway->addExit(passage2);
+    hallway->addExit(studyDoor);
+    study->addExit(studyDoor2);
+    study->addExit(gardenDoor);
+    garden->addExit(window2);
+    garden->addExit(gardenDoor2);
+    garden->addExit(exitDoor);
 
     // Add items to rooms
-    room1->addItem(key);
-    room2->addItem(box);
-    room3->addItem(sword);
+    room->addItem(box);
+    hallway->addItem(note);
+    armory->addItem(sword);
+    armory->addItem(armor);
+    study->addItem(money);
 
     // Create player and NPC
-    Player* player = new Player("Player", "The main character", room1, 20, 10, 5);
-    Creature* npc = new Creature("NPC", "A non-player character", room2, 20, 10, 5);
-    room2->addCreature(npc);
+    Player* player = new Player("Player", "The main character.", cell, 20, 10, 5);
+    Creature* goblin = new Creature("Goblin", "A small goblin with a knife.", hallway, 11, 10, 5);
+    Creature* boss = new Creature("Boss", "A big and bad goblin.", garden, 20, 15, 10);
+    hallway->addCreature(goblin);
+    garden->addCreature(boss);
 
     // Add player and NPC to the world
     setPlayer(player);
-    setEntity(npc);
+    setEntity(goblin);
+    setEntity(boss);
 
 }
 
