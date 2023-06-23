@@ -19,7 +19,7 @@ public:
 	void takeCommand(string parameter);
 	void takeCommand(list<string> parameter);
 	void dropCommand(string parameter);
-	void moveCommand(string parameter);
+	bool moveCommand(string parameter);
 	void openCommand(string parameter);
 	bool attackCommand(string parameter);
 	void equipCommand(string parameter);

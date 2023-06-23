@@ -19,7 +19,7 @@ World::World() {
     setEntity(note);
     Item* money = new Item("Money", "A good stack of money.", false, 0, 0);
     setEntity(money);
-    Item* goldKey = new Item("Gold key", "A key to freedom.", false, 0, 0);
+    Item* goldKey = new Item("GoldKey", "A key to freedom.", false, 0, 0);
     setEntity(goldKey);
 
     box->addItems(key);
@@ -65,7 +65,7 @@ World::World() {
     setEntity(gardenDoor);
     Exit* gardenDoor2 = new Exit("GlassDoor", "The study can be seen through the door glass.", Direction::WEST, garden, study, DoorState::OPEN, NULL);
     setEntity(gardenDoor2);
-    Exit* exitDoor = new Exit("ExitDoor", "The door to the outside. It has a lock.", Direction::WEST, garden, study, DoorState::CLOSED, goldKey);
+    Exit* exitDoor = new Exit("ExitDoor", "The door to the outside. It has a lock.", Direction::EAST, garden, outside, DoorState::CLOSED, goldKey);
     setEntity(exitDoor);
 
     // Add exits to rooms
@@ -89,6 +89,7 @@ World::World() {
     armory->addItem(sword);
     armory->addItem(armor);
     study->addItem(money);
+    garden->addItem(goldKey);
 
     // Create player and NPC
     Player* player = new Player("Player", "The main character.", cell, 20, 10, 5);
@@ -259,7 +260,9 @@ int World::play() {
                 // Move action
                 // If given a direction, move to the room if exit is existent
                 else if (command == "move") {
-                    player->moveCommand(parameter);
+                    if (player->moveCommand(parameter)) {
+                        gameOver = true;
+                    }
                 }
                 // Open action
                 // If given a targer, open the exit if locked.

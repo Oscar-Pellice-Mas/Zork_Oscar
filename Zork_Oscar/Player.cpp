@@ -238,7 +238,7 @@ void Player::dropCommand(string parameter) {
     }
 }
 
-void Player::moveCommand(string parameter) {
+bool Player::moveCommand(string parameter) {
     if (parameter.empty()) {
         cout << "Indicate an direction to move." << endl;
     }
@@ -261,6 +261,15 @@ void Player::moveCommand(string parameter) {
                         Room* nextRoom = exit->getDestination();
                         setLocation(nextRoom);
                         printBase();
+                        
+                        // If player gets to the exit
+                        if (stringToLower(nextRoom->getName()) == "outside") {
+                            printBase();
+                            cout << "Congratulations!" << endl;
+                            cout << "---------------------------------------" << endl;
+                            return true;
+                        }
+
                         cout << "You moved to " << nextRoom->getName() << "." << endl;
                         break;
                     }
@@ -273,6 +282,7 @@ void Player::moveCommand(string parameter) {
         }
 
     }
+    return false;
 }
 
 void Player::openCommand(string parameter) {
